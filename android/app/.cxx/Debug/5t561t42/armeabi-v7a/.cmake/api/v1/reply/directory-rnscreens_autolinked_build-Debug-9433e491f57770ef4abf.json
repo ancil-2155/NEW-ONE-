@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "rnscreens_autolinked_build",
+		"source" : "C:/Users/amche/OneDrive/Desktop/PROJECTS/ACAMS/node_modules/react-native-screens/android/src/main/jni"
+	}
+}
