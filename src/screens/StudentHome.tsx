@@ -17,7 +17,7 @@ const StudentHome = ({ navigation }: any) => {
     { id: 1, title: 'Announcements', icon: '📢', gradient: ['#FF6B6B', '#FF8E53'], screen: 'Announcements' },
     { id: 2, title: 'Join Meeting', icon: '🎥', gradient: ['#4ECDC4', '#556270'], screen: 'MeetingViewer' },
     { id: 3, title: 'Library', icon: '📚', gradient: ['#45B7D1', '#96C93D'], screen: 'Library' },
-    { id: 4, title: 'WhatsApp Chat', icon: '👥', gradient: ['#25D366', '#128C7E'], screen: 'Chat' },
+    { id: 4, title: 'WhatsApp Chat', icon: '👥', gradient: ['#25D366', '#128C7E'], screen: 'GroupChat' },
     { id: 5, title: 'Bonafide Request', icon: '📄', gradient: ['#F7B731', '#F3904F'], screen: 'Bonafide' },
     { id: 6, title: 'Gallery', icon: '📸', gradient: ['#A855F7', '#D946EF'], screen: 'Gallery' },
     { id: 7, title: 'Academic Section', icon: '📅', gradient: ['#3B82F6', '#2DD4BF'], screen: 'TimetableMenu' },

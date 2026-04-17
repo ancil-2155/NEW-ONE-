@@ -10,9 +10,12 @@ import {
   StyleSheet,
 } from 'react-native';
 
+type Role = 'Student' | 'Teacher' | 'Parent';
+
 const LoginScreen = ({ navigation }: any) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState<Role>('Student');
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -30,24 +33,18 @@ const LoginScreen = ({ navigation }: any) => {
 
       const userData = userDoc.data();
 
-      if (!userData) {
-        Alert.alert('Error', 'User data not found');
+      if (!userData?.approved) {
+        Alert.alert('Pending', 'Waiting for admin approval');
         return;
       }
 
-      if (!userData.approved) {
-        Alert.alert('Pending', 'Waiting for approval');
-        return;
-      }
-
+      // 🔥 Role-based navigation
       if (userData.role === 'Student') {
         navigation.replace('StudentHome');
       } else if (userData.role === 'Teacher') {
         navigation.replace('TeacherHome');
-      } else if (userData.role === 'Parent') {
-        navigation.replace('ParentHome');
       } else {
-        Alert.alert('Error', 'Invalid role');
+        navigation.replace('ParentHome');
       }
 
     } catch (error: any) {
@@ -64,7 +61,6 @@ const LoginScreen = ({ navigation }: any) => {
         placeholder="Email"
         value={email}
         onChangeText={setEmail}
-        autoCapitalize="none"
       />
 
       <TextInput
@@ -75,37 +71,72 @@ const LoginScreen = ({ navigation }: any) => {
         onChangeText={setPassword}
       />
 
+     
+
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
+        <Text style={styles.buttonText}>Login </Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-        <Text style={{ marginTop: 10, textAlign: 'center' }}>
-          Create Account
-        </Text>
+        <Text style={{ marginTop: 10 }}>Create Account</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('Admin')}>
-  <Text>Go to Admin</Text>
-</TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: { flex: 1, justifyContent: 'center', padding: 20 },
-  title: { fontSize: 26, fontWeight: 'bold', marginBottom: 20 },
+
+  title: {
+    fontSize: 26,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+
   input: {
     borderWidth: 1,
     padding: 12,
     marginBottom: 10,
     borderRadius: 8,
   },
+
+  roleTitle: {
+    marginTop: 10,
+    fontWeight: '600',
+  },
+
+  roleContainer: {
+    flexDirection: 'row',
+    marginVertical: 10,
+  },
+
+  roleButton: {
+    flex: 1,
+    padding: 10,
+    borderWidth: 1,
+    margin: 3,
+    alignItems: 'center',
+  },
+
+  roleSelected: {
+    backgroundColor: '#2563EB',
+  },
+
+  roleText: {
+    color: '#000',
+  },
+
+  roleTextSelected: {
+    color: '#fff',
+  },
+
   button: {
     backgroundColor: '#2563EB',
     padding: 12,
     marginTop: 10,
     borderRadius: 8,
   },
+
   buttonText: {
     color: '#fff',
     textAlign: 'center',

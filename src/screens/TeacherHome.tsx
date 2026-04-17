@@ -21,6 +21,10 @@ const TeacherHome = ({ navigation }: any) => {
   <Text>Upload Results</Text>
 </TouchableOpacity>
 
+<TouchableOpacity onPress={() => navigation.navigate('CreateGroup')}>
+  <Text>Create WhatsApp Group</Text>
+</TouchableOpacity>
+
       <TouchableOpacity style={styles.button}>
         <Text style={styles.text}>📚 Upload Resources</Text>
       </TouchableOpacity>

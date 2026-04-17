@@ -8,39 +8,33 @@ import {
   Alert,
 } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-import auth from '@react-native-firebase/auth';
 
 const UploadResultScreen = () => {
+  const [studentEmail, setStudentEmail] = useState('');
   const [subject, setSubject] = useState('');
   const [marks, setMarks] = useState('');
+  const [department, setDepartment] = useState('');
 
   const uploadResult = async () => {
-    if (!subject || !marks) {
+    if (!studentEmail || !subject || !marks || !department) {
       Alert.alert('Error', 'Fill all fields');
       return;
     }
 
     try {
-      const user = auth().currentUser;
-
-      const userDoc = await firestore()
-        .collection('users')
-        .doc(user?.uid)
-        .get();
-
-      const userData = userDoc.data();
-
       await firestore().collection('results').add({
+        studentEmail,
         subject,
         marks,
-        department: userData?.department, // 🔥 auto from teacher
+        department,
         createdAt: new Date(),
       });
 
       Alert.alert('Success', 'Result uploaded!');
+      setStudentEmail('');
       setSubject('');
       setMarks('');
-
+      setDepartment('');
     } catch (error: any) {
       Alert.alert('Error', error.message);
     }
@@ -49,6 +43,13 @@ const UploadResultScreen = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Upload Result</Text>
+
+      <TextInput
+        placeholder="Student Email"
+        style={styles.input}
+        value={studentEmail}
+        onChangeText={setStudentEmail}
+      />
 
       <TextInput
         placeholder="Subject"
@@ -62,6 +63,13 @@ const UploadResultScreen = () => {
         style={styles.input}
         value={marks}
         onChangeText={setMarks}
+      />
+
+      <TextInput
+        placeholder="Department (CSE / ECE / MECH)"
+        style={styles.input}
+        value={department}
+        onChangeText={setDepartment}
       />
 
       <TouchableOpacity style={styles.button} onPress={uploadResult}>

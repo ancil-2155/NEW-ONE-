@@ -18,6 +18,9 @@ import UploadResultScreen from '../screens/UploadResultScreen.tsx';
 import ViewResultsScreen from '../screens/ViewResultsScreen.tsx';
 import LibraryScreen from '../screens/LibraryScreen.tsx';
 import ChatBotScreen from '../screens/ChatBotScreen.tsx';
+import GroupChatScreen from '../screens/GroupChatScreen.tsx';
+import CreateGroupScreen from '../screens/CreateGroupScreen.tsx';
+
 
 
 const Stack = createNativeStackNavigator();
@@ -42,6 +45,8 @@ const AppNavigator = () => {
 <Stack.Screen name="ViewResults" component={ViewResultsScreen} />
 <Stack.Screen name="Library" component={LibraryScreen} />
 <Stack.Screen name="ChatBot" component={ChatBotScreen} />
+<Stack.Screen name="GroupChat" component={GroupChatScreen} />
+<Stack.Screen name="CreateGroup" component={CreateGroupScreen} />
 
 
 
