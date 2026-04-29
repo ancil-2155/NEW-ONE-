@@ -6,9 +6,13 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../navigation/AppNavigator';
+
+type TimetableMenuNavigationProp = NativeStackNavigationProp<RootStackParamList, 'TimetableMenu'>;
 
 const TimetableMenuScreen = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<TimetableMenuNavigationProp>();
   return (
     <View style={styles.container}>
       <Text style={styles.title}>📅 Academic Section</Text>

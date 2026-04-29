@@ -1,8 +1,17 @@
 {
-  "extends": "@react-native/typescript-config",
   "compilerOptions": {
-    "types": ["jest"]
+    "jsx": "react-jsx",
+    "moduleResolution": "node",
+    "allowJs": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "ignoreDeprecations": "6.0"
   },
-  "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["**/node_modules", "**/Pods"]
+  "exclude": [
+    "node_modules",
+    "android",
+    "ios",
+    "acams-chat-backend"
+  ]
 }

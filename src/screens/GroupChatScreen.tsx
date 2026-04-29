@@ -11,45 +11,34 @@ import {
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 
-const GroupChatScreen = () => {
+const GroupChatScreen = ({ route, navigation }: any) => {
+  const { groupId } = route.params;
+
   const [messages, setMessages] = useState<any[]>([]);
   const [input, setInput] = useState('');
-  const [department, setDepartment] = useState('');
 
-  useEffect(() => {
-  const user = auth().currentUser;
+ useEffect(() => {
+  const unsubscribe = firestore()
+    .collection('groupMessages')
+    .where('groupId', '==', groupId)
+    .orderBy('createdAt', 'asc')
+    .onSnapshot(
+      snapshot => {
+        if (!snapshot) return; // 🔥 FIX
 
-  if (!user) return;
+        const data = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
 
-  const unsubscribeUser = firestore()
-    .collection('users')
-    .doc(user.uid)
-    .onSnapshot(userDoc => {
-      const dept = userDoc.data()?.department;
+        setMessages(data);
+      },
+      error => {
+        console.log("FIRESTORE ERROR:", error); // 🔥 DEBUG
+      }
+    );
 
-      console.log("Department:", dept);
-
-      if (!dept) return;
-
-      setDepartment(dept);
-
-      firestore()
-        .collection('groupChats')
-        .where('department', '==', dept)
-        .orderBy('createdAt', 'asc')
-        .onSnapshot(snapshot => {
-          if (!snapshot?.docs) return;
-
-          const data = snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-
-          setMessages(data);
-        });
-    });
-
-  return () => unsubscribeUser();
+  return unsubscribe;
 }, []);
 
   const sendMessage = async () => {
@@ -57,39 +46,60 @@ const GroupChatScreen = () => {
 
     const user = auth().currentUser;
 
-    await firestore().collection('groupChats').add({
+    await firestore().collection('groupMessages').add({
+      groupId: groupId, // 🔥 IMPORTANT
       text: input,
-      sender: user?.email,
-      department: department,
+      sender: user?.uid,
+      senderEmail: user?.email,
       type: 'text',
-      seenBy: [],
+      seenBy: [user?.uid],
       createdAt: new Date(),
     });
 
     setInput('');
   };
+<TouchableOpacity
+  onPress={() => navigation.navigate('GroupMembers', { groupId })}
+>
+  <Text style={{ color: 'blue' }}>👥 View Members</Text>
+</TouchableOpacity>
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>💬 {department} Chat</Text>
+  <View style={styles.container}>
+    
+    <Text style={styles.header}>💬 Group Chat</Text>
 
-      <FlatList
-        data={messages}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View
-            style={[
-              styles.message,
-              item.sender === auth().currentUser?.email
-                ? styles.user
-                : styles.other,
-            ]}
-          >
-            <Text style={{ fontSize: 10 }}>{item.sender}</Text>
-            <Text>{item.text}</Text>
-          </View>
-        )}
-      />
+    {/* 👥 VIEW MEMBERS BUTTON */}
+    <TouchableOpacity
+      onPress={() => navigation.navigate('GroupMembers', { groupId })}
+      style={{ marginBottom: 10 }}
+    >
+      <Text style={{ color: '#2563EB', fontWeight: '600' }}>
+        👥 View Members
+      </Text>
+    </TouchableOpacity>
+
+    <FlatList
+      data={messages}
+      keyExtractor={(item) => item.id}
+      renderItem={({ item }) => (
+        <View
+          style={[
+            styles.message,
+            item.sender === auth().currentUser?.uid
+              ? styles.user
+              : styles.other,
+          ]}
+        >
+          <Text style={{ fontSize: 10 }}>{item.senderEmail}</Text>
+          <Text>{item.text}</Text>
+
+          <Text style={{ fontSize: 10 }}>
+            {item.seenBy?.length > 1 ? '✔✔' : '✔'}
+          </Text>
+        </View>
+      )}
+    />
 
       <View style={styles.inputContainer}>
         <TextInput
